@@ -22,7 +22,10 @@
 
 // heater output
 
-#define HEATER_OUTPUT 16
+// #define HEATER_OUTPUT 16
+
+// for debug purpuse we use signal LED
+#define HEATER_OUTPUT TEMPERATURE_INDICATOR
 
 // buttons 
 

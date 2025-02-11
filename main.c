@@ -43,13 +43,33 @@ int main() {
     {
         
         int32_t temperature = read_temperature();
+        printf("TC:%d\n",temperature); 
 
         // main loop automatic or manual
 
-        int32_t target = read_target_temperature();
+        if( check_mode() )
+        {
+            // automatic mode
 
-        printf("TC:%d\n",temperature);     
-        printf("TA:%d\n",target);    
+            int32_t target = read_target_temperature();
+
+            printf("TA:%d\n",target);
+
+            // PID goes brrrrrr
+        }
+        else
+        {
+            // manual mode
+
+            uint16_t power = read_power();
+
+            printf("P:%d\n",power);
+
+            set_duty_cycle(power);
+
+            // regulated by human user
+        }
+    
         
         sleep_ms(MAIN_LOOP_REFRESH_MS);
     }

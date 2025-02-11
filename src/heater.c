@@ -64,3 +64,18 @@ void stop_heater()
     reset_pwm();
 
 }
+
+void set_duty_cycle(uint16_t duty)
+{
+    if( duty > 4095 )
+    {
+        duty = 4095;
+    }
+
+    duty_length = duty;
+}
+
+uint16_t get_duty_cycle()
+{
+    return duty_length;
+}
