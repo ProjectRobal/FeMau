@@ -8,6 +8,7 @@
 
 #include "adc_sensors.h"
 #include "heater.h"
+#include "buttons.h"
 
 /*
     To do:
@@ -36,6 +37,7 @@ int main() {
 
     init_heater();
 
+    init_buttons();
 
     while(1)
     {
