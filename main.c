@@ -7,6 +7,7 @@
 #include "hardware/adc.h"
 
 #include "adc_sensors.h"
+#include "heater.h"
 
 /*
     To do:
@@ -24,7 +25,6 @@
 
 */
 
-// PWM will be driven by interrupts and timers
 
 int main() {
 
@@ -33,6 +33,8 @@ int main() {
 
     // init ADC sensors
     init_adc_sensors();
+
+    init_heater();
 
 
     while(1)

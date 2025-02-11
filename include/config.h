@@ -18,7 +18,11 @@
 
 // zero cross input
 
-#define ZEROCROSS_DETECTOR 17
+#define ZEROCROSS_DETECTOR_PIN 17
+
+// heater output
+
+#define HEATER_OUTPUT 16
 
 // buttons 
 
