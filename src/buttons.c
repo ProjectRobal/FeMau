@@ -12,7 +12,7 @@ volatile static bool automatic;
 volatile static bool enabled;
 
 
-static void buttons_callback(uint gpio, uint32_t events)
+void buttons_callback(uint gpio, uint32_t events)
 {
     switch (gpio)
     {

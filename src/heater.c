@@ -20,7 +20,7 @@ static int64_t reset_pwm_callback(alarm_id_t id, void *user_data) {
 
 // PWM will be driven by interrupts and timers
 
-static void zerocross_detection(uint gpio,uint32_t events)
+static void zerocross_detection(uint gpio, uint32_t events)
 {
     printf("Cross detected\n");
     // start PWM timer
@@ -48,7 +48,10 @@ void init_heater()
     gpio_set_dir(HEATER_OUTPUT,true);
     gpio_put(HEATER_OUTPUT,false);
 
-    gpio_set_irq_enabled_with_callback(ZEROCROSS_DETECTOR_PIN, GPIO_IRQ_EDGE_RISE, true, &zerocross_detection);
+    gpio_init(ZEROCROSS_DETECTOR_PIN);
+    gpio_set_dir(ZEROCROSS_DETECTOR_PIN,false);
+
+    gpio_set_irq_enabled_with_callback(ZEROCROSS_DETECTOR_PIN, GPIO_IRQ_EDGE_FALL, true,&zerocross_detection);
 
 }
 
@@ -57,14 +60,14 @@ void start_heater()
 
     reset_pwm();
 
-    gpio_set_irq_enabled(ZEROCROSS_DETECTOR_PIN,GPIO_IRQ_EDGE_RISE,true);
+    gpio_set_irq_enabled(ZEROCROSS_DETECTOR_PIN,GPIO_IRQ_EDGE_FALL,true);
 
 }
 
 void stop_heater()
 {
     
-    gpio_set_irq_enabled(ZEROCROSS_DETECTOR_PIN,GPIO_IRQ_EDGE_RISE,false);
+    gpio_set_irq_enabled(ZEROCROSS_DETECTOR_PIN,GPIO_IRQ_EDGE_FALL,false);
 
     reset_pwm();
 

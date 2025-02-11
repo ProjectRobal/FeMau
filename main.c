@@ -32,16 +32,21 @@ int main() {
     stdio_init_all();
     printf("Hello, world!\n");
 
+    printf("ADC init \n");
     // init ADC sensors
     init_adc_sensors();
 
+    printf("Heater init \n");
     init_heater();
 
-    init_buttons();
+    printf("Buttons init \n");
+    // init_buttons();
+
+    // start_heater();
 
     bool enabled = false;
 
-    // start_heater();
+    sleep_ms(1000);
 
 
     while(1)
@@ -70,7 +75,7 @@ int main() {
 
         // main loop automatic or manual
 
-        if( !check_mode() )
+        if( check_mode() )
         {
             // automatic mode
 
