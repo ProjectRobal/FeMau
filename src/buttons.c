@@ -6,6 +6,8 @@
 
 #include "buttons.h"
 
+#include "gpio_interrupt.h"
+
 // button states
 volatile static bool calibration;
 volatile static bool automatic;
@@ -52,11 +54,11 @@ void init_buttons()
     sleep_ms(10);
 
 
-    gpio_set_irq_enabled_with_callback(START_BUTTON,GPIO_IRQ_EDGE_FALL,true,&buttons_callback);
+    gpio_set_irq_enabled_with_callback(START_BUTTON,GPIO_IRQ_EDGE_FALL,true,&gpio_interrupt_handler);
 
-    gpio_set_irq_enabled_with_callback(CALIB_BUTTON,GPIO_IRQ_EDGE_FALL,true,&buttons_callback);
+    gpio_set_irq_enabled_with_callback(CALIB_BUTTON,GPIO_IRQ_EDGE_FALL,true,&gpio_interrupt_handler);
 
-    gpio_set_irq_enabled_with_callback(AUTOMATIC_MANUAL_BUTTON,GPIO_IRQ_EDGE_FALL,true,&buttons_callback);
+    gpio_set_irq_enabled_with_callback(AUTOMATIC_MANUAL_BUTTON,GPIO_IRQ_EDGE_FALL,true,&gpio_interrupt_handler);
 
 }
 

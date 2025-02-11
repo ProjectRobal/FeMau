@@ -2,9 +2,14 @@
 
 #include <stdio.h>
 
+#include "gpio_interrupt.h"
+
 
 // from 0 to 4095
 static volatile uint16_t duty_length;
+
+static volatile bool heater_enable;
+
 
 static inline void reset_pwm()
 {
@@ -20,15 +25,20 @@ static int64_t reset_pwm_callback(alarm_id_t id, void *user_data) {
 
 // PWM will be driven by interrupts and timers
 
-static void zerocross_detection(uint gpio, uint32_t events)
+void zerocross_detection(uint gpio, uint32_t events)
 {
-    printf("Cross detected\n");
+    if( gpio != ZEROCROSS_DETECTOR_PIN )
+    {
+        return;
+    }
+
+    // printf("Cross detected\n");
     // start PWM timer
     if( duty_length > 0 )
     {
         gpio_put(HEATER_OUTPUT,true);
 
-        printf("Cycle started\n");
+        // printf("Cycle started\n");
 
         add_alarm_in_us( (4395*duty_length)/1000 ,&reset_pwm_callback,NULL,false);
     }
@@ -51,7 +61,7 @@ void init_heater()
     gpio_init(ZEROCROSS_DETECTOR_PIN);
     gpio_set_dir(ZEROCROSS_DETECTOR_PIN,false);
 
-    gpio_set_irq_enabled_with_callback(ZEROCROSS_DETECTOR_PIN, GPIO_IRQ_EDGE_FALL, true,&zerocross_detection);
+    gpio_set_irq_enabled_with_callback(ZEROCROSS_DETECTOR_PIN, GPIO_IRQ_EDGE_FALL, true,&gpio_interrupt_handler);
 
 }
 

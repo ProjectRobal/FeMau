@@ -16,8 +16,10 @@
         - temperature measurment - done
         - potentiometer readings - done
 
-        - zero cross detection
-        - PWM control
+        - zero cross detection - done
+        - PWM control - done
+
+        - buttons
 
         - PID regulator
         - automatic and manual control
@@ -40,7 +42,7 @@ int main() {
     init_heater();
 
     printf("Buttons init \n");
-    // init_buttons();
+    init_buttons();
 
     // start_heater();
 
@@ -61,12 +63,12 @@ int main() {
         {
             if(check_enable)
             {
-                // start_heater();
+                start_heater();
                 printf("HS:1\n");
             }
             else
             {
-                // stop_heater();
+                stop_heater();
                 printf("HS:0\n");
             }
 
