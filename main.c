@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "class/cdc/cdc_device.h"
+
 
 #include "hardware/gpio.h"
 #include "hardware/adc.h"
@@ -9,6 +11,8 @@
 #include "adc_sensors.h"
 #include "heater.h"
 #include "buttons.h"
+#include "pid.h"
+#include "console.h"
 
 /*
     To do:
@@ -19,12 +23,16 @@
         - zero cross detection - done
         - PWM control - done
 
-        - buttons
+        - buttons - done
 
-        - PID regulator
-        - automatic and manual control
+        - PID regulator - done
+        - automatic and manual control - done
 
         - some nice oled screen
+
+        - console functions
+
+        - calibration
 
 */
 
@@ -32,30 +40,55 @@
 int main() {
 
     stdio_init_all();
-    printf("Hello, world!\n");
 
-    printf("ADC init \n");
+    sleep_ms(2000);
+
+    puts("Hello, world!");
+
+    puts("ADC init");
     // init ADC sensors
     init_adc_sensors();
 
-    printf("Heater init \n");
+    puts("Heater init");
     init_heater();
 
-    printf("Buttons init \n");
+    puts("Buttons init");
     init_buttons();
 
-    // start_heater();
+    puts("PID init");
+    init_pid();
+
 
     bool enabled = false;
-
-    sleep_ms(1000);
 
 
     while(1)
     {
+
+        if(tud_cdc_connected())
+        {
+            char c = tud_cdc_read_char();
+
+            if( c > -1 )
+            {
+                if(process_console_input(c))
+                {
+                    // process message if anything was recived
+
+                    puts(console_get_value());
+                    puts(console_get_header());
+
+                    // set PID values
+                    // start/stop heater
+                    // set Power
+                }
+            }
+
+        }
         
         int32_t temperature = read_temperature();
-        // printf("TC:%d\n",temperature); 
+        printf("TC:%d\n",temperature); 
+
 
         bool check_enable = check_enabled();
 
@@ -64,12 +97,12 @@ int main() {
             if(check_enable)
             {
                 start_heater();
-                printf("HS:1\n");
+                puts("HS:1");
             }
             else
             {
                 stop_heater();
-                printf("HS:0\n");
+                puts("HS:0");
             }
 
             enabled = check_enable;
@@ -83,7 +116,13 @@ int main() {
 
             int32_t target = read_target_temperature();
 
-            // printf("TA:%d\n",target);
+            printf("TA:%d\n",target);
+
+            int32_t error = target - temperature;
+
+            uint16_t power = pid_step(error);
+
+            set_duty_cycle(power);
 
             // PID goes brrrrrr
         }
@@ -93,7 +132,7 @@ int main() {
 
             uint16_t power = read_power();
 
-            // printf("P:%d\n",power);
+            printf("P:%d\n",power);
 
             set_duty_cycle(power);
 
