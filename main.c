@@ -39,21 +39,44 @@ int main() {
 
     init_buttons();
 
+    bool enabled = false;
+
+    // start_heater();
+
+
     while(1)
     {
         
         int32_t temperature = read_temperature();
-        printf("TC:%d\n",temperature); 
+        // printf("TC:%d\n",temperature); 
+
+        bool check_enable = check_enabled();
+
+        if( enabled != check_enable )
+        {
+            if(check_enable)
+            {
+                // start_heater();
+                printf("HS:1\n");
+            }
+            else
+            {
+                // stop_heater();
+                printf("HS:0\n");
+            }
+
+            enabled = check_enable;
+        }
 
         // main loop automatic or manual
 
-        if( check_mode() )
+        if( !check_mode() )
         {
             // automatic mode
 
             int32_t target = read_target_temperature();
 
-            printf("TA:%d\n",target);
+            // printf("TA:%d\n",target);
 
             // PID goes brrrrrr
         }
@@ -63,7 +86,7 @@ int main() {
 
             uint16_t power = read_power();
 
-            printf("P:%d\n",power);
+            // printf("P:%d\n",power);
 
             set_duty_cycle(power);
 
