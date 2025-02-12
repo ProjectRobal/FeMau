@@ -8,12 +8,15 @@
 
 #include "hardware/gpio.h"
 #include "hardware/adc.h"
+#include "hardware/i2c.h"
 
 #include "adc_sensors.h"
 #include "heater.h"
 #include "buttons.h"
 #include "pid.h"
 #include "console.h"
+
+#include "screen.h"
 
 /*
     To do:
@@ -29,9 +32,9 @@
         - PID regulator - done
         - automatic and manual control - done
 
-        - console functions
+        - console functions - done
 
-        - some nice oled screen
+        - some nice oled/lcd screen
 
         - calibration
 
@@ -60,6 +63,8 @@ volatile uint16_t manual_power = 0;
 volatile bool temperature_override = false;
 volatile int32_t manual_temperature = 0;
 
+
+
 int main() {
 
     stdio_init_all();
@@ -81,11 +86,16 @@ int main() {
     puts("PID init");
     init_pid();
 
+    puts("Screen init");
+    init_screen();
+    
+
 
     bool enabled = false;
 
     bool last_mode = check_mode();
 
+    uint8_t oled_counter = 5;
 
     while(1)
     {
@@ -107,6 +117,7 @@ int main() {
                     // start/stop heater
                     // set Power
                     // check status
+                    // etc
                 }
             }
 
@@ -114,7 +125,7 @@ int main() {
         
         int32_t temperature = read_temperature();
 
-        // send_int_value("TC:",temperature);
+        send_int_value("TC:",temperature);
 
 
         bool check_enable = check_enabled();
@@ -151,11 +162,11 @@ int main() {
 
         // main loop automatic or manual
 
+        int32_t target = 0;
+
         if( mode )
         {
-            // automatic mode
-
-            int32_t target = 0; 
+            // automatic mode 
 
             if( temperature_override )
             {
@@ -166,7 +177,7 @@ int main() {
                 target = read_target_temperature();
             }
 
-            // send_int_value("TA:",target);
+            send_int_value("TA:",target);
 
             int32_t error = target - temperature;
 
@@ -174,7 +185,7 @@ int main() {
 
             set_duty_cycle(power);
 
-            // send_current_duty_value();
+            send_current_duty_value();
 
             // PID goes brrrrrr
         }
@@ -195,12 +206,20 @@ int main() {
 
             set_duty_cycle(power);
 
-            // send_current_duty_value();
+            send_current_duty_value();
 
             // regulated by human user
         }
+
+        if( oled_counter == 0 )
+        {
+            update_screen(temperature,target);
+
+            oled_counter = 5;
+        }
     
-        
+        oled_counter--;
+
         sleep_ms(MAIN_LOOP_REFRESH_MS);
     }
 
