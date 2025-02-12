@@ -99,7 +99,7 @@ void set_duty_cycle(uint16_t duty)
     duty_length = duty;
 }
 
-uint16_t get_duty_cycle()
+uint16_t get_heater_duty_cycle()
 {
     return duty_length;
 }

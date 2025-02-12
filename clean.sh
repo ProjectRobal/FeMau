@@ -1,3 +1,5 @@
 #!/bin/bash
 
-rm -R build/*
+clear
+
+sudo rm -R build/*
