@@ -81,3 +81,7 @@ bool check_mode()
     return automatic;
 }
 
+bool set_mode(bool mode)
+{
+    automatic = mode;
+}

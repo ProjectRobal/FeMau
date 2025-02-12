@@ -2,7 +2,7 @@
 
 #include "class/cdc/cdc_device.h"
 
-#define BUFFER_SIZE 64
+#define CONSOLE_BUFFER_SIZE 64
 
 bool process_console_input(char c);
 

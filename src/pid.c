@@ -71,3 +71,18 @@ void init_pid()
 
     reset_pid();
 }
+
+int32_t getP()
+{
+    return P;
+}
+
+int32_t getI()
+{
+    return I;
+}
+
+int32_t getD()
+{
+    return D;
+}

@@ -61,6 +61,8 @@ void init_heater()
     gpio_init(ZEROCROSS_DETECTOR_PIN);
     gpio_set_dir(ZEROCROSS_DETECTOR_PIN,false);
 
+    heater_enable = true;
+
     gpio_set_irq_enabled_with_callback(ZEROCROSS_DETECTOR_PIN, GPIO_IRQ_EDGE_FALL, true,&gpio_interrupt_handler);
 
 }
@@ -72,6 +74,8 @@ void start_heater()
 
     gpio_set_irq_enabled(ZEROCROSS_DETECTOR_PIN,GPIO_IRQ_EDGE_FALL,true);
 
+    heater_enable = true;
+
 }
 
 void stop_heater()
@@ -80,6 +84,8 @@ void stop_heater()
     gpio_set_irq_enabled(ZEROCROSS_DETECTOR_PIN,GPIO_IRQ_EDGE_FALL,false);
 
     reset_pwm();
+
+    heater_enable = false;
 
 }
 
@@ -96,4 +102,9 @@ void set_duty_cycle(uint16_t duty)
 uint16_t get_duty_cycle()
 {
     return duty_length;
+}
+
+bool is_heater_enabled()
+{
+    return heater_enable;
 }
