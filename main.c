@@ -57,6 +57,9 @@ inline void send_current_duty_value();
 volatile bool manual_override = false;
 volatile uint16_t manual_power = 0;
 
+volatile bool temperature_override = false;
+volatile int32_t manual_temperature = 0;
+
 int main() {
 
     stdio_init_all();
@@ -152,7 +155,16 @@ int main() {
         {
             // automatic mode
 
-            int32_t target = read_target_temperature();
+            int32_t target = 0; 
+
+            if( temperature_override )
+            {
+                target = manual_temperature;
+            }
+            else
+            {
+                target = read_target_temperature();
+            }
 
             // send_int_value("TA:",target);
 
@@ -286,6 +298,13 @@ void process_console_messages()
     else if( strncmp(cmd,"PG",CONSOLE_BUFFER_SIZE) == 0 )
     {
         send_current_duty_value();
+    }
+    // set current temperature
+    else if( strncmp(cmd,"TS",CONSOLE_BUFFER_SIZE) == 0 )
+    {
+        manual_temperature = atoi(value);
+        
+        temperature_override = true;
     }
     // set pid values
     else if( strncmp(cmd,"PIDS",CONSOLE_BUFFER_SIZE) == 0 )
