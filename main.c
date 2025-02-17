@@ -34,7 +34,7 @@
 
         - console functions - done
 
-        - some nice oled/lcd screen
+        - some nice oled/lcd screen - done
 
         - calibration
 
@@ -63,6 +63,7 @@ volatile uint16_t manual_power = 0;
 volatile bool temperature_override = false;
 volatile int32_t manual_temperature = 0;
 
+volatile bool blink = false;
 
 
 int main() {
@@ -89,6 +90,8 @@ int main() {
     puts("Screen init");
     init_screen();
     
+    gpio_init(TEMPERATURE_INDICATOR);
+    gpio_set_dir(TEMPERATURE_INDICATOR,true);
 
 
     bool enabled = false;
@@ -156,6 +159,19 @@ int main() {
             {
                 manual_override = false;
             }
+
+            const char* header = "M:";
+        
+            fwrite(header,1,2,stdout);
+
+            if( mode )
+            {
+                fwrite("1\n",1,2,stdout);
+            }
+            else
+            {
+                fwrite("0\n",1,2,stdout);
+        }
             
             last_mode = mode;
         }
@@ -180,6 +196,15 @@ int main() {
             send_int_value("TA:",target);
 
             int32_t error = target - temperature;
+
+            if( abs(error) < 500 )
+            {
+                gpio_put(TEMPERATURE_INDICATOR,false);
+            }
+            else
+            {
+                gpio_put(TEMPERATURE_INDICATOR,true);
+            }
 
             uint16_t power = pid_step(error);
 
@@ -207,6 +232,10 @@ int main() {
             set_duty_cycle(power);
 
             send_current_duty_value();
+
+            gpio_put(TEMPERATURE_INDICATOR,blink);
+
+            blink = !blink;
 
             // regulated by human user
         }

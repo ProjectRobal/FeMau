@@ -9,20 +9,25 @@
 #include "oled.h"
 
 
-void SSD1306_send_cmd(uint8_t cmd) {
+bool SSD1306_send_cmd(uint8_t cmd) {
     // I2C write process expects a control byte followed by data
     // this "data" can be a command or data to follow up a command
     // Co = 1, D/C = 0 => the driver expects a command
     uint8_t buf[2] = {0x80, cmd};
-    i2c_write_blocking(SSD1306_I2C, SSD1306_I2C_ADDR, buf, 2, false);
+    return i2c_write_blocking(SSD1306_I2C, SSD1306_I2C_ADDR, buf, 2, false) != PICO_ERROR_GENERIC;
 }
 
-void SSD1306_send_cmd_list(uint8_t *buf, int num) {
+bool SSD1306_send_cmd_list(uint8_t *buf, int num) {
+
+    bool ret = true;
+
     for (int i=0;i<num;i++)
-        SSD1306_send_cmd(buf[i]);
+        ret &= SSD1306_send_cmd(buf[i]);
+
+    return ret;
 }
 
-void SSD1306_send_buf(uint8_t buf[], int buflen) {
+bool SSD1306_send_buf(uint8_t buf[], int buflen) {
     // in horizontal addressing mode, the column address pointer auto-increments
     // and then wraps around to the next page, so we can send the entire frame
     // buffer in one gooooooo!
@@ -35,12 +40,14 @@ void SSD1306_send_buf(uint8_t buf[], int buflen) {
     temp_buf[0] = 0x40;
     memcpy(temp_buf+1, buf, buflen);
 
-    i2c_write_blocking(SSD1306_I2C, SSD1306_I2C_ADDR, temp_buf, buflen + 1, false);
+    bool ret = i2c_write_blocking(SSD1306_I2C, SSD1306_I2C_ADDR, temp_buf, buflen + 1, false) != PICO_ERROR_GENERIC;
 
     free(temp_buf);
+
+    return ret;
 }
 
-void SSD1306_init() {
+bool SSD1306_init() {
     // Some of these commands are not strictly necessary as the reset
     // process defaults to some of these but they are shown here
     // to demonstrate what the initialization sequence looks like
@@ -86,7 +93,7 @@ void SSD1306_init() {
         SSD1306_SET_DISP | 0x01, // turn display on
     };
 
-    SSD1306_send_cmd_list(cmds, count_of(cmds));
+    return SSD1306_send_cmd_list(cmds, count_of(cmds));
 }
 
 void SSD1306_scroll(bool on) {

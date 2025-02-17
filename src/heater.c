@@ -11,6 +11,7 @@ static volatile uint16_t duty_length;
 static volatile bool heater_enable;
 
 
+
 static inline void reset_pwm()
 {
     gpio_put(HEATER_OUTPUT,false);

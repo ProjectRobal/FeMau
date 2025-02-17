@@ -13,6 +13,11 @@ static uint8_t oled_buffer[SSD1306_BUF_LEN] = {0};
 
 static volatile bool blink = false;
 
+static volatile bool oled_failed = false;
+
+
+
+
 static void clear_buffer()
 {
     memset(oled_buffer,0,SSD1306_BUF_LEN);
@@ -27,11 +32,19 @@ void init_screen()
     gpio_pull_up(SSD1306_SDA_PIN);
     gpio_pull_up(SSD1306_SCL_PIN);
 
-    SSD1306_init();
+    if(! SSD1306_init() )
+    {
+        oled_failed = true;
+    }
 }
 
 void update_screen(int32_t temperature,int32_t target_temperature)
 {
+    if( oled_failed )
+    {
+        return;
+    }
+
     clear_buffer();
 
     bool mode = check_mode();
@@ -47,11 +60,6 @@ void update_screen(int32_t temperature,int32_t target_temperature)
     FillRect(oled_buffer,117,0,127,10,blink);
 
     blink = !blink;
-
-    if( blink )
-    {
-
-    }
 
     if(mode)
     {
@@ -129,6 +137,9 @@ void update_screen(int32_t temperature,int32_t target_temperature)
         DrawBitmap(oled_buffer,48,15,32,32,bitmap_sleepy);
     }
 
-    SSD1306_send_buf(oled_buffer,SSD1306_BUF_LEN);
+    if( !SSD1306_send_buf(oled_buffer,SSD1306_BUF_LEN) )
+    {
+        oled_failed = true;
+    }
 }
 

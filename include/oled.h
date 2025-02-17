@@ -60,13 +60,13 @@
 
 
 
-void SSD1306_send_cmd(uint8_t cmd);
+bool SSD1306_send_cmd(uint8_t cmd);
 
-void SSD1306_send_cmd_list(uint8_t *buf, int num);
+bool SSD1306_send_cmd_list(uint8_t *buf, int num);
 
-void SSD1306_send_buf(uint8_t buf[], int buflen);
+bool SSD1306_send_buf(uint8_t buf[], int buflen);
 
-void SSD1306_init();
+bool SSD1306_init();
 
 void SSD1306_scroll(bool on);
 
