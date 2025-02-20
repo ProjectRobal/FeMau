@@ -8,7 +8,7 @@
 // from 0 to 4095
 static volatile uint16_t duty_length;
 
-static volatile bool heater_enable;
+static volatile bool heater_enable = false;
 
 
 
@@ -35,7 +35,7 @@ void zerocross_detection(uint gpio, uint32_t events)
 
     // printf("Cross detected\n");
     // start PWM timer
-    if( duty_length > 0 )
+    if( duty_length > 0 && heater_enable )
     {
         gpio_put(HEATER_OUTPUT,true);
 

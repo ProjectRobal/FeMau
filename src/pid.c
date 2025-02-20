@@ -15,8 +15,8 @@ volatile static int64_t last_error;
 
 static inline void set_pid_default()
 {
-    P = 1000;
-    I = 0;
+    P = 5000;
+    I = 1;
     D = 0;
 }
 
@@ -113,22 +113,22 @@ uint16_t pid_step(int32_t error)
 
     int64_t fixed_error = error;
 
-    int64_t derror = error - last_error;
+    int64_t derror = fixed_error - last_error;
 
-    integral += I*error;
+    integral += I*fixed_error;
 
-    if( integral > 1000000 )
+    if( integral > 40950000 )
     {
-        integral = 1000000;
+        integral = 40950000;
     }
 
-    if( integral < -1000000 )
+    if( integral < -40950000 )
     {
-        integral = -1000000;
+        integral = -40950000;
     }
     
 
-    int16_t output = ( P*fixed_error + D*derror + integral ) / 1000;
+    int64_t output = ( P*fixed_error + D*derror + integral ) / 100000;
 
 
     last_error = fixed_error;

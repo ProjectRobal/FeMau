@@ -5,9 +5,11 @@
 #include "adc_sensors.h"
 
 // should be less than 16
-#define TEMP_BETA 4
+#define TEMP_BETA 8
 
 #define FP_SHIFT 4
+
+static volatile bool first_temp_measure = true;
 
 static uint32_t last_raw_value = 0; 
 
@@ -27,13 +29,25 @@ int32_t read_temperature()
 
     int32_t raw = adc_read();
 
-    // low pass filter
-    raw <<= FP_SHIFT;
-    last_raw_value = ( last_raw_value<<TEMP_BETA ) - last_raw_value;
-    last_raw_value += raw;
-    last_raw_value >>= TEMP_BETA; 
+    int32_t smooth_value = 0;
 
-    int32_t smooth_value = last_raw_value >> FP_SHIFT;
+    if( !first_temp_measure )
+    {
+    // low pass filter
+        raw <<= FP_SHIFT;
+        last_raw_value = ( last_raw_value<<TEMP_BETA ) - last_raw_value;
+        last_raw_value += raw;
+        last_raw_value >>= TEMP_BETA; 
+
+        smooth_value = last_raw_value >> FP_SHIFT;
+    }
+    else
+    {
+        first_temp_measure = false;
+
+        smooth_value = raw;
+    }
+    
 
     int32_t temperature = -363*smooth_value + 1255170;
 

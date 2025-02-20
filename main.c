@@ -197,7 +197,7 @@ int main() {
 
             int32_t error = target - temperature;
 
-            if( abs(error) < 500 )
+            if( ( abs(error) < 3000 ) || (! is_heater_enabled() ) )
             {
                 gpio_put(TEMPERATURE_INDICATOR,false);
             }
@@ -233,7 +233,7 @@ int main() {
 
             send_current_duty_value();
 
-            gpio_put(TEMPERATURE_INDICATOR,blink);
+            gpio_put(TEMPERATURE_INDICATOR,blink & is_heater_enabled());
 
             blink = !blink;
 
