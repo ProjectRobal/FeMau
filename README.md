@@ -24,6 +24,8 @@ PCB was designed in EasyEDA software, PCB design is at:  https://oshwlab.com/pcb
  ![476506290_543866012001315_5123969416552470952_n](https://github.com/user-attachments/assets/37b61afb-4462-43be-997f-2d54ade763d0)
 ![476485224_627088853199105_6613587259296386456_n](https://github.com/user-attachments/assets/1d626c2b-ab15-47d8-9369-765d2979a49f)
 
+Case was designed using OnShape, case design at: https://cad.onshape.com/documents/a69b47e1ecfba8f8370f5734/w/35900cda5c9f064562da8d43/e/9215ecddb9166f7bd1c409f2?renderMode=0&uiState=67b7857d2d278737974ae116
+
 # Heater in action
 
 https://github.com/user-attachments/assets/daa97195-ee8b-42bb-9346-056ab70d0cc8
