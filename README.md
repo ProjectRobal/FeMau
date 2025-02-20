@@ -15,6 +15,10 @@ A dedicated application is provided it is used for settings PID configuration an
 
 You can also see basic data on 128x64 SSD1306 based OLED screen, using I2C !!!
 
+# Electronics
+
+PCB was designed in EasyEDA software, PCB design is at:  https://oshwlab.com/pcbrobal/pcbiron
+
  # Device
 
  ![476506290_543866012001315_5123969416552470952_n](https://github.com/user-attachments/assets/37b61afb-4462-43be-997f-2d54ade763d0)
