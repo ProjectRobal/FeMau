@@ -41,7 +41,7 @@ void zerocross_detection(uint gpio, uint32_t events)
 
         // printf("Cycle started\n");
 
-        add_alarm_in_us( (4395*duty_length)/1000 ,&reset_pwm_callback,NULL,false);
+        add_alarm_in_us( (2196*duty_length)/1000 ,&reset_pwm_callback,NULL,false);
     }
     else
     {
