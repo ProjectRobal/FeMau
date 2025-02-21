@@ -1,7 +1,7 @@
 # FeMau - PCB heater based on Raspberry Pi Pico and Iron
 
  A simple project made of disassembled iron and Raspberry Pi Pico board. 
- It is powered from +230 V, to power Pico on board HLK-PM03 is used, it converts +230 V from mains line to +3.3 V. Mains voltage is also used to power heater. Heater is controlled using triac VOT8121AB-T. Temperature readings comes from PT-1000 sensor 
+ It is powered from +230 V, to power Pico on board HLK-PM03 is used, it converts +230 V from mains line to +3.3 V. Mains voltage is also used to power heater. Heater is controlled using triac T2035T-8G-TR. Temperature readings comes from PT-1000 sensor 
  that is connected to current source based on TL431. 
 
  It works in automatic mode in which heater is controlled by a PID based regulator ( it's parameters can be changed by dedicated application ), also in manual mode in which user controll heater's power ( useful during calibrations ). Raspberry Pi Pico 
